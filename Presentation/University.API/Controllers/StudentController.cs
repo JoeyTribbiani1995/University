@@ -11,6 +11,7 @@ using University.Services.Students;
 
 namespace University.API.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : Controller
@@ -31,6 +32,21 @@ namespace University.API.Controllers
                 return Ok(result);
             }
             return BadRequest("invalid get student");
+        }
+
+        [HttpPost("CreateStudent")]
+        public IActionResult CreateStudent([FromBody] Student student)
+        {
+            try
+            {
+              _studentService.InsertStudent(student);
+
+               return Ok();
+            }
+            catch
+            {
+                return BadRequest("invalid get student");
+            }
         }
     }
 }

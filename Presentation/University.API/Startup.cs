@@ -16,6 +16,9 @@ using University.Core.Domain;
 using University.Core.Infrastructure;
 using University.Data;
 using University.Services.Students;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.IO;
 
 namespace University.API
 {
@@ -38,6 +41,15 @@ namespace University.API
 
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         
 
         }
@@ -56,6 +68,17 @@ namespace University.API
             }
 
             app.UseHttpsRedirection();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
             app.UseMvc();
         }
     }

@@ -7,5 +7,7 @@ namespace University.Services.Students
     public interface IStudentService
     {
         Task<Student> GetStudentById(int id);
+
+        void InsertStudent(Student student);
     }
 }

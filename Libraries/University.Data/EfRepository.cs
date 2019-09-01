@@ -26,6 +26,12 @@ namespace University.Data
             return await Entities.FindAsync(id);
         }
 
+        public void Insert(TEntity entity)
+        {
+            Entities.Add(entity);
+            _context.SaveChanges();
+        }
+
         protected virtual DbSet<TEntity> Entities
         {
             get

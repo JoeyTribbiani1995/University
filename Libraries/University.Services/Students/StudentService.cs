@@ -25,5 +25,20 @@ namespace University.Services.Students
 
             return result;
         }
+
+        public void InsertStudent(Student student)
+        {
+            try
+            {
+                if(student != null)
+                {
+                    _studentRepository.Insert(student);
+                }
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }
