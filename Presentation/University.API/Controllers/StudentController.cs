@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using University.API.Models;
 using University.Core.Domain;
 using University.Data;
 using University.Services.Students;
@@ -17,28 +20,35 @@ namespace University.API.Controllers
     public class StudentController : Controller
     {
         private readonly IStudentService _studentService;
+        private readonly IMapper _mapper;
 
-        public StudentController(IStudentService studentService)
+        public StudentController(IStudentService studentService, IMapper mapper)
         {
             _studentService = studentService;
+            _mapper = mapper;
         }
 
         [HttpGet("GetStudentById/{id}")]
-        public async Task<IActionResult> GetStudentById(int id)
+        [ProducesResponseType(typeof(StudentModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<StudentModel>> GetStudentById(int id)
         {
-           var result = await _studentService.GetStudentById(id);
+           var temp = await _studentService.GetStudentById(id);
+            var result = _mapper.Map<StudentModel>(temp);
+
            if(result != null)
             {
                 return Ok(result);
             }
-            return BadRequest("invalid get student");
+            return NotFound("invalid get student");
         }
 
         [HttpPost("CreateStudent")]
-        public IActionResult CreateStudent([FromBody] Student student)
+        public IActionResult CreateStudent([FromBody] StudentModel studentModel)
         {
             try
             {
+                var student = _mapper.Map<Student>(studentModel);
               _studentService.InsertStudent(student);
 
                return Ok();

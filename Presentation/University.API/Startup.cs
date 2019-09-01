@@ -19,6 +19,7 @@ using University.Services.Students;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
+using AutoMapper;
 
 namespace University.API
 {
@@ -37,10 +38,13 @@ namespace University.API
             services.AddDbContext<UniversityContext>(opt =>
                 opt.UseInMemoryDatabase("University"));
 
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+
+            services.AddAutoMapper();
 
             services.AddSwaggerGen(c =>
             {
@@ -50,7 +54,7 @@ namespace University.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-        
+
 
         }
 
