@@ -49,9 +49,9 @@ namespace University.API.Controllers
             try
             {
                 var student = _mapper.Map<Student>(studentModel);
-              _studentService.InsertStudent(student);
+                _studentService.InsertStudent(student);
 
-               return Ok();
+                return Ok();
             }
             catch
             {

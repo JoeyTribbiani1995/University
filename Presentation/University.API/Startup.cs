@@ -20,29 +20,40 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
 using AutoMapper;
+using Autofac;
+
 
 namespace University.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            this.Configuration = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
+        public IConfigurationRoot Configuration { get; private set; }
+
+        public ILifetimeScope AutofacContainer { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+
             services.AddDbContext<UniversityContext>(opt =>
                 opt.UseInMemoryDatabase("University"));
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+           // services.AddScoped<IStudentService, StudentService>();
+            //services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
             services.AddAutoMapper();
 
@@ -58,18 +69,18 @@ namespace University.API
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void ConfigureContainer(ContainerBuilder builder)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            builder.RegisterType<StudentService>().As<IStudentService>().InstancePerLifetimeScope();
+            builder.RegisterType<EfRepository<Student>>().As<IRepository<Student>>().InstancePerLifetimeScope();
+
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
 
             app.UseHttpsRedirection();
 
