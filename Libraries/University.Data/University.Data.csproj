@@ -10,4 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\University.Core\University.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mapping\" />
+  </ItemGroup>
 </Project>
