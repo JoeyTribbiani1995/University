@@ -72,7 +72,8 @@ namespace University.API
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<StudentService>().As<IStudentService>().InstancePerLifetimeScope();
-                        builder.RegisterType<EfRepository<Student>>().As<IRepository<Student>>().InstancePerLifetimeScope();
+                        
+            builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
         }
 
