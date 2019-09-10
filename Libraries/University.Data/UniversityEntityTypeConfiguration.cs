@@ -19,13 +19,13 @@ namespace University.Data
 
         #endregion
 
-        public void Configure(EntityTypeBuilder<TEntity> builder)
+        public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
             //add custom configuration
             PostConfigure(builder);
         }
 
-        public void ApplyConfiguration(ModelBuilder modelBuilder)
+        public virtual void ApplyConfiguration(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(this);
         }

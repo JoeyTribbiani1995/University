@@ -7,7 +7,7 @@ namespace University.Data.Mapping
 {
     public class StudentMap : UniversityEntityTypeConfiguration<Student>
     {
-        public void Configure(EntityTypeBuilder<Student> builder)
+        public override void Configure(EntityTypeBuilder<Student> builder)
         {
             builder.HasKey(student => student.Id);
             builder.Property(student => student.Name)
