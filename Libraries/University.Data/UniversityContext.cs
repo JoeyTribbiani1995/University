@@ -13,7 +13,11 @@ namespace University.Core.Infrastructure
         {
         }
 
-        public DbSet<Student> Students { get; set; }
+        //public DbSet<Student> Students { get; set; }
+        public virtual new DbSet<TEntity> Set<TEntity>() where TEntity : class
+        {
+            return base.Set<TEntity>();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
