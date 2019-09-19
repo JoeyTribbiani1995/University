@@ -14,14 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="UnitTest1.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Students\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Libraries\University.Core\University.Core.csproj" />
-    <ProjectReference Include="..\Libraries\University.Data\University.Data.csproj" />
-    <ProjectReference Include="..\Libraries\University.Services\University.Services.csproj" />
+    <ProjectReference Include="..\..\Libraries\University.Data\University.Data.csproj" />
+    <ProjectReference Include="..\..\Libraries\University.Core\University.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\University.Services\University.Services.csproj" />
   </ItemGroup>
 </Project>
