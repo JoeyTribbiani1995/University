@@ -43,5 +43,6 @@ namespace University.Data
             }
         }
 
+        public IQueryable<TEntity> Table => Entities;
     }
 }

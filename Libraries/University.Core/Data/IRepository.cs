@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace University.Core.Data
@@ -7,5 +8,10 @@ namespace University.Core.Data
     {
         Task<TEntity> GetById(object id);
         void Insert(TEntity entity);
+
+        /// <summary>
+        /// Gets a table
+        /// </summary>
+        IQueryable<TEntity> Table { get; }
     }
 }
