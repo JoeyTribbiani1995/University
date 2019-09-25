@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using University.API.Models;
 using University.Core.Domain;
 using University.Data;
 using University.Services.Students;
+
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,11 +23,17 @@ namespace University.API.Controllers
     {
         private readonly IStudentService _studentService;
         private readonly IMapper _mapper;
+        private readonly ILogger<StudentController> _logger;
 
-        public StudentController(IStudentService studentService, IMapper mapper)
+
+        public StudentController(
+            IStudentService studentService,
+            IMapper mapper,
+            ILogger<StudentController> logger)
         {
             _studentService = studentService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet("GetStudentById/{id}")]
@@ -33,6 +41,7 @@ namespace University.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<StudentModel>> GetStudentById(int id)
         {
+            _logger.LogInformation("Get Student by Id");
            var temp = await _studentService.GetStudentById(id);
             var result = _mapper.Map<StudentModel>(temp);
 
@@ -40,6 +49,7 @@ namespace University.API.Controllers
             {
                 return Ok(result);
             }
+            _logger.LogWarning("GetStudentById({Id}) NOT FOUND", id);
             return NotFound("invalid get student");
         }
 

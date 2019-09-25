@@ -27,8 +27,13 @@ namespace University.API
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        //Create Logs in Startup
+        private readonly ILogger _logger;
+
+        public Startup(IHostingEnvironment env, ILogger<Startup> logger)
         {
+            _logger = logger;
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -52,7 +57,7 @@ namespace University.API
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-           // services.AddScoped<IStudentService, StudentService>();
+            // services.AddScoped<IStudentService, StudentService>();
             //services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
             services.AddAutoMapper();
@@ -74,6 +79,7 @@ namespace University.API
             builder.RegisterType<StudentService>().As<IStudentService>().InstancePerLifetimeScope();
                         
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            _logger.LogInformation("Added container");
 
         }
 

@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Autofac.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 namespace University.API
 {
 
@@ -21,6 +22,13 @@ namespace University.API
                 .ConfigureServices(services => services.AddAutofac())
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddEventSourceLogger();
+                })
                 .UseStartup<Startup>()
                 .Build();
 
